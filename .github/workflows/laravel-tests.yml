@@ -5,16 +5,11 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch:    # memungkinkan run manual
+  workflow_dispatch:
 
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
-
-    env:
-      APP_ENV: testing
-      DB_CONNECTION: sqlite
-      DB_DATABASE: /github/workspace/database/database.sqlite
 
     steps:
       - name: Checkout repository
@@ -45,6 +40,8 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=$(pwd)/database/database.sqlite" >> .env
 
       - name: Prepare SQLite database
         run: |
